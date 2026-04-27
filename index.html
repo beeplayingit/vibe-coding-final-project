@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibe Typing - Idle Quote Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header / Stats Bar -->
+        <header class="header">
+            <div class="logo">Vibe Typing</div>
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-label">Characters</span>
+                    <span class="stat-value" id="characterCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Multiplier</span>
+                    <span class="stat-value" id="multiplierDisplay">1.00x</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Prestige</span>
+                    <span class="stat-value" id="prestigeDisplay">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Game Area -->
+        <main class="game-area">
+            <div class="quote-section">
+                <div class="quote-display" id="quoteDisplay">
+                    <p id="currentQuote"></p>
+                </div>
+                
+                <div class="typing-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="typingInput" 
+                        class="typing-input" 
+                        placeholder="Start typing to earn characters..."
+                        autocomplete="off"
+                    >
+                    <div class="input-progress" id="inputProgress"></div>
+                </div>
+
+                <div class="quote-stats">
+                    <span id="typedChars">0</span> / <span id="totalChars">0</span> characters
+                    <span class="wpm-display" id="wpmDisplay"></span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="shopBtn" class="btn btn-primary">Shop</button>
+                <button id="prestigeBtn" class="btn btn-secondary">Prestige</button>
+            </div>
+
+            <div class="active-upgrades">
+                <h3>Active Upgrades</h3>
+                <div id="upgradesList" class="upgrades-list"></div>
+            </div>
+        </main>
+
+        <!-- Auto-Typer Passive Income Panel -->
+        <aside class="auto-typer-panel">
+            <div class="auto-typer-header">
+                <h3>Passive Typing</h3>
+                <div class="passive-income-display">+<span id="passiveIncomePerSec">0</span> chars/sec</div>
+            </div>
+            <div id="autoTypersList" class="auto-typers-list"></div>
+        </aside>
+
+        <!-- Shop Modal -->
+        <div id="shopModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Shop</h2>
+                    <button class="close-btn" id="closeShop">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="shop-tabs">
+                        <button class="tab-btn active" data-tab="multipliers">Multipliers</button>
+                        <button class="tab-btn" data-tab="auto-typers">Auto-typers</button>
+                        <button class="tab-btn" data-tab="speed-boosters">Speed Boosters</button>
+                    </div>
+                    <div id="shopContent" class="shop-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prestige Modal -->
+        <div id="prestigeModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Prestige</h2>
+                    <button class="close-btn" id="closePrestige">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="prestige-info">
+                        <div class="prestige-stat">
+                            <span class="label">Current Characters</span>
+                            <span class="value" id="prestigeCurrentCharacters">0</span>
+                        </div>
+                        <div class="prestige-stat">
+                            <span class="label">Prestige Level Gained</span>
+                            <span class="value" id="prestigeGain">1</span>
+                        </div>
+                        <div class="prestige-stat">
+                            <span class="label">Permanent Multiplier Bonus</span>
+                            <span class="value" id="prestigeBonus">+0.10x</span>
+                        </div>
+                        <div class="prestige-unlocks">
+                            <span class="label">New Categories Unlocked</span>
+                            <div id="unlocksPreview"></div>
+                        </div>
+                    </div>
+                    <button id="confirmPrestige" class="btn btn-primary">Confirm Prestige Reset</button>
+                    <p class="prestige-warning">This will reset your words and upgrades but keep your prestige bonus.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay -->
+        <div id="overlay" class="overlay hidden"></div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
