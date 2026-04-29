@@ -59,7 +59,11 @@ const QUOTES_DATABASE = {
             "It is a dark time for the Rebellion",
             "The snow in the mountains is melting and Gondor has need of Rohan",
             "A boy who lived under the stairs would change everything",
-            "The year that trembled on the edge of a new decade brought with it a great change"
+            "The year that trembled on the edge of a new decade brought with it a great change",
+            "In the beginning God created the heavens and the earth and all things living within them",
+            "The old man and the sea had a relationship built on respect and enduring struggle through time",
+            "Every moment of human history reveals deep truths about the nature of suffering and redemption",
+            "The vast landscape of the American frontier symbolized the boundless dreams of a desperate nation"
         ]
     },
     speeches: {
@@ -79,7 +83,11 @@ const QUOTES_DATABASE = {
             "We hold these truths to be self evident",
             "The unexamined life is not worth living",
             "I think therefore I am",
-            "Knowledge is power"
+            "Knowledge is power",
+            "We must never surrender to the darkness that threatens to consume our most cherished ideals and freedoms",
+            "The pursuit of excellence demands that we sacrifice comfort and embrace the challenge of growth and change",
+            "In times of great uncertainty the measure of our character is revealed through steadfast dedication to truth",
+            "The world changes only when ordinary people summon courage to challenge the systems that bind us"
         ]
     },
     songs: {
@@ -99,7 +107,19 @@ const QUOTES_DATABASE = {
             "Twist and shout come on",
             "Yesterday all my troubles seemed so far away",
             "Hey Jude don't make it bad",
-            "Come together right now over me"
+            "Come together right now over me",
+            "If you're happy and you know it clap your hands",
+            "What's a girl to do? Lying on my bed staring into the moon",
+            "Love is driving me a bit insane",
+            "I can't get no satisfaction",
+            "You may say I'm a dreamer but I'm not the only one",
+            "We are the champions my friends",
+            "I will survive oh as long as I know how to love I know I'll stay alive",
+            "We were sitting at the restaurant waiting for the check",
+            "I'm going back to 505 if it's a seven hour flight or a forty five minute drive",
+            "The moment that I met you I felt something deep inside that transcended all rational thought and understanding",
+            "Through every trial and tribulation we kept pushing forward believing that love would ultimately conquer fear",
+            "Standing at the edge of forever knowing that this moment would define everything about who we are and will become"
         ]
     },
     pop_culture: {
@@ -119,7 +139,11 @@ const QUOTES_DATABASE = {
             "Big mood",
             "No cap",
             "I'm living my best life",
-            "That hits different"
+            "That hits different",
+            "It's not always about doing the most important thing it's about doing what makes you feel accomplished",
+            "The journey to self discovery sometimes means breaking away from everything you once believed to be true",
+            "In a world that constantly demands perfection we must learn to embrace our beautifully broken imperfections",
+            "Every meme and viral moment represents a collective consciousness struggling to find meaning in chaos"
         ]
     },
     nature: {
@@ -139,45 +163,102 @@ const QUOTES_DATABASE = {
             "Snow covers the world in peaceful silence",
             "Thunder rolls across the distant horizon",
             "The waves crash upon the rocky shore",
-            "Morning breaks with golden light"
+            "Morning breaks with golden light",
+            "The vast expanse of wilderness teaches us that we are merely transient visitors in a world far greater than ourselves",
+            "Every creature from the smallest insect to the mightiest beast plays a vital role maintaining the delicate balance of existence",
+            "The eternal cycle of seasons reminds us that change is constant and resistance to it is futile and ultimately destructive",
+            "Standing alone in pristine nature we confront the profound truth that our concerns are insignificant against infinity"
         ]
     }
 };
 
 // ============================================
-// SHOP UPGRADES CONFIGURATION
+// SHOP UPGRADES CONFIGURATION (Base costs - scales with purchases)
 // ============================================
 const SHOP_UPGRADES = {
     multipliers: [
-        { id: 'mult1', name: '1.2x Multiplier', description: 'Earn 1.2x characters', cost: 50, effect: 0.2, max_purchased: Infinity },
-        { id: 'mult2', name: '1.5x Multiplier', description: 'Earn 1.5x characters', cost: 200, effect: 0.5, max_purchased: Infinity },
-        { id: 'mult3', name: '2.0x Multiplier', description: 'Earn 2.0x characters', cost: 500, effect: 1.0, max_purchased: Infinity },
-        { id: 'mult4', name: '3.0x Multiplier', description: 'Earn 3.0x characters', cost: 1500, effect: 2.0, max_purchased: Infinity },
+        { id: 'mult1', name: '1.2x Multiplier', description: 'Earn 1.2x characters', base_cost: 50, effect: 0.2, max_purchased: Infinity },
+        { id: 'mult2', name: '1.5x Multiplier', description: 'Earn 1.5x characters', base_cost: 200, effect: 0.5, max_purchased: Infinity },
+        { id: 'mult3', name: '2.0x Multiplier', description: 'Earn 2.0x characters', base_cost: 500, effect: 1.0, max_purchased: Infinity },
+        { id: 'mult4', name: '3.0x Multiplier', description: 'Earn 3.0x characters', base_cost: 1500, effect: 2.0, max_purchased: Infinity },
     ],
     'auto-typers': [
-        { id: 'auto1', name: '5 WPM Auto', description: 'Types 5 words per minute passively', cost: 100, speed_wpm: 5, max_purchased: Infinity },
-        { id: 'auto2', name: '10 WPM Auto', description: 'Types 10 words per minute passively', cost: 300, speed_wpm: 10, max_purchased: Infinity },
-        { id: 'auto3', name: '15 WPM Auto', description: 'Types 15 words per minute passively', cost: 600, speed_wpm: 15, max_purchased: Infinity },
-        { id: 'auto4', name: '20 WPM Auto', description: 'Types 20 words per minute passively', cost: 1000, speed_wpm: 20, max_purchased: Infinity },
-        { id: 'auto5', name: '30 WPM Auto', description: 'Types 30 words per minute passively', cost: 1800, speed_wpm: 30, max_purchased: Infinity },
-        { id: 'auto6', name: '50 WPM Auto', description: 'Types 50 words per minute passively', cost: 3000, speed_wpm: 50, max_purchased: Infinity },
+        { id: 'auto1', name: '5 WPM Auto', description: 'Types 5 words per minute passively', base_cost: 100, speed_wpm: 5, max_purchased: Infinity },
+        { id: 'auto2', name: '10 WPM Auto', description: 'Types 10 words per minute passively', base_cost: 300, speed_wpm: 10, max_purchased: Infinity },
+        { id: 'auto3', name: '15 WPM Auto', description: 'Types 15 words per minute passively', base_cost: 600, speed_wpm: 15, max_purchased: Infinity },
+        { id: 'auto4', name: '20 WPM Auto', description: 'Types 20 words per minute passively', base_cost: 1000, speed_wpm: 20, max_purchased: Infinity },
+        { id: 'auto5', name: '30 WPM Auto', description: 'Types 30 words per minute passively', base_cost: 1800, speed_wpm: 30, max_purchased: Infinity },
+        { id: 'auto6', name: '50 WPM Auto', description: 'Types 50 words per minute passively', base_cost: 3000, speed_wpm: 50, max_purchased: Infinity },
     ],
     'speed-boosters': [
-        { id: 'speed1', name: 'Speed +10%', description: 'Bonus for fast typing', cost: 75, effect: 0.1, max_purchased: Infinity },
-        { id: 'speed2', name: 'Speed +25%', description: 'Bigger bonus for speed', cost: 250, effect: 0.25, max_purchased: Infinity },
-        { id: 'speed3', name: 'Speed +50%', description: 'Major speed bonus', cost: 600, effect: 0.5, max_purchased: Infinity },
+        { id: 'speed1', name: 'Speed +10%', description: 'Bonus for fast typing', base_cost: 75, effect: 0.1, max_purchased: Infinity },
+        { id: 'speed2', name: 'Speed +25%', description: 'Bigger bonus for speed', base_cost: 250, effect: 0.25, max_purchased: Infinity },
+        { id: 'speed3', name: 'Speed +50%', description: 'Major speed bonus', base_cost: 600, effect: 0.5, max_purchased: Infinity },
     ]
 };
 
 // ============================================
-// GAME STATE CLASS
+// MINIGAMES CONFIGURATION
 // ============================================
+const MINIGAMES = [
+    { 
+        id: 'speed-sprint', 
+        name: 'Speed Sprint', 
+        description: 'Type the word as fast as possible', 
+        cooldown_ms: 45000,
+        reward_base: 100,
+        multiplier_bonus: 0.2,
+        multiplier_duration_ms: 30000,
+        challenge: 'type-word',
+        word_length: 'medium' // 5-7 letters
+    },
+    { 
+        id: 'accuracy-master', 
+        name: 'Accuracy Master', 
+        description: 'Type perfectly to earn 150 bonus characters', 
+        cooldown_ms: 60000,
+        reward_base: 150,
+        multiplier_bonus: 0.3,
+        multiplier_duration_ms: 30000,
+        challenge: 'perfect-type',
+        word_length: 'short' // 3-5 letters
+    },
+    { 
+        id: 'rapid-fire', 
+        name: 'Rapid Fire', 
+        description: 'Type 3 short phrases in 20 seconds', 
+        cooldown_ms: 90000,
+        reward_base: 200,
+        multiplier_bonus: 0.5,
+        multiplier_duration_ms: 45000,
+        challenge: 'rapid-fire',
+        word_length: 'short'
+    },
+];
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+function format_large_number(num) {
+    if (num >= 1e12) {
+        return (num / 1e12).toFixed(2).replace(/\.?0+$/, '') + 'T';
+    } else if (num >= 1e9) {
+        return (num / 1e9).toFixed(2).replace(/\.?0+$/, '') + 'B';
+    } else if (num >= 1e6) {
+        return (num / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M';
+    } else if (num >= 1e3) {
+        return (num / 1e3).toFixed(1).replace(/\.?0+$/, '') + 'K';
+    }
+    return Math.floor(num).toString();
+}
 class GameState {
     constructor() {
         this.characters = 0;
         this.prestige = 0;
-        this.prestige_multiplier = 1.0; // Permanent bonus
+        this.prestige_multiplier = 1.0; // Base multiplier per prestige level
         this.upgrades = {}; // { 'mult1': 2, 'auto1': 1, ... }
+        this.minigame_buffs = {}; // { 'rapid-fire': { active: true, end_time: 123456, multiplier_bonus: 0.3 }, ... }
+        this.minigame_last_played = {}; // { 'rapid-fire': 123456, ... } (timestamp)
         this.unlocked_categories = new Set(['movies']);
         this.current_quote = '';
         this.current_category = 'movies';
@@ -192,6 +273,7 @@ class GameState {
             this.prestige = data.prestige || 0;
             this.prestige_multiplier = data.prestige_multiplier || 1.0;
             this.upgrades = data.upgrades || {};
+            this.minigame_last_played = data.minigame_last_played || {};
             this.unlocked_categories = new Set(data.unlocked_categories || ['movies']);
             this.current_category = data.current_category || 'movies';
         }
@@ -203,14 +285,36 @@ class GameState {
             prestige: this.prestige,
             prestige_multiplier: this.prestige_multiplier,
             upgrades: this.upgrades,
+            minigame_last_played: this.minigame_last_played,
             unlocked_categories: Array.from(this.unlocked_categories),
             current_category: this.current_category,
         };
         localStorage.setItem('vibe_typing_save', JSON.stringify(data));
     }
 
+    get_upgrade_cost(upgrade_id) {
+        let upgrade_obj = null;
+        
+        for (const category in SHOP_UPGRADES) {
+            const found = SHOP_UPGRADES[category].find(u => u.id === upgrade_id);
+            if (found) {
+                upgrade_obj = found;
+                break;
+            }
+        }
+        
+        if (!upgrade_obj) return 0;
+        
+        const count = this.upgrades[upgrade_id] || 0;
+        // Scaling: cost increases by 15% per purchase
+        const scaled_cost = Math.floor(upgrade_obj.base_cost * Math.pow(1.15, count));
+        return scaled_cost;
+    }
+
     get_current_multiplier() {
-        let multiplier = this.prestige_multiplier;
+        // Base multiplier from prestige: prestige_level + 1, plus permanent bonus
+        // Prestige 0: 1x, Prestige 1: 2.1x (with 0.1 bonus), Prestige 2: 3.2x, etc.
+        let multiplier = this.prestige + this.prestige_multiplier;
         
         // Add multiplier upgrades
         for (const [upgrade_id, count] of Object.entries(this.upgrades)) {
@@ -222,7 +326,25 @@ class GameState {
             }
         }
         
+        // Add active minigame buffs
+        const now = Date.now();
+        for (const [buff_id, buff] of Object.entries(this.minigame_buffs)) {
+            if (buff.active && buff.end_time > now) {
+                multiplier += buff.multiplier_bonus;
+            }
+        }
+        
         return multiplier;
+    }
+
+    get_required_characters_for_prestige() {
+        // Scaling requirement: 100,000 * (prestige + 1)^3 - much harder progression
+        const next_level = this.prestige + 1;
+        return Math.floor(100000 * Math.pow(next_level, 3));
+    }
+
+    can_prestige() {
+        return this.characters >= this.get_required_characters_for_prestige();
     }
 
     get_auto_typer_percentage() {
@@ -314,21 +436,23 @@ class GameState {
         }
         
         if (!upgrade_obj) return false;
-        if (this.characters < upgrade_obj.cost) return false;
+        
+        const cost = this.get_upgrade_cost(upgrade_id);
+        if (this.characters < cost) return false;
         
         const current_count = this.upgrades[upgrade_id] || 0;
         if (current_count >= upgrade_obj.max_purchased) return false;
         
-        this.characters -= upgrade_obj.cost;
+        this.characters -= cost;
         this.upgrades[upgrade_id] = current_count + 1;
         this.save_to_storage();
         return true;
     }
 
     prestige_reset() {
-        const new_prestige_level = Math.floor(Math.sqrt(this.characters / 100)) + 1;
+        const new_prestige_level = 1; // Each prestige grants 1 level now
         this.prestige += new_prestige_level;
-        this.prestige_multiplier += 0.05 * new_prestige_level; // Permanent bonus
+        this.prestige_multiplier += 0.1; // Permanent bonus increases by 0.1
         
         // Unlock new categories
         for (const category in QUOTES_DATABASE) {
@@ -340,7 +464,65 @@ class GameState {
         // Reset progress
         this.characters = 0;
         this.upgrades = {};
+        this.minigame_buffs = {};
+        this.minigame_last_played = {};
         this.save_to_storage();
+    }
+
+    is_minigame_available(minigame_id) {
+        const now = Date.now();
+        const last_played = this.minigame_last_played[minigame_id] || 0;
+        const minigame = MINIGAMES.find(m => m.id === minigame_id);
+        
+        if (!minigame) return false;
+        return (now - last_played) >= minigame.cooldown_ms;
+    }
+
+    play_minigame(minigame_id) {
+        const minigame = MINIGAMES.find(m => m.id === minigame_id);
+        if (!minigame || !this.is_minigame_available(minigame_id)) return false;
+        
+        const now = Date.now();
+        this.minigame_last_played[minigame_id] = now;
+        this.save_to_storage();
+        return true;
+    }
+
+    award_minigame_reward(minigame_id, performance_multiplier = 1.0) {
+        const minigame = MINIGAMES.find(m => m.id === minigame_id);
+        if (!minigame) return 0;
+        
+        const reward = Math.floor(minigame.reward_base * performance_multiplier * this.get_current_multiplier());
+        this.characters += reward;
+        
+        // Award temporary multiplier bonus
+        const now = Date.now();
+        this.minigame_buffs[minigame_id] = {
+            active: true,
+            end_time: now + minigame.multiplier_duration_ms,
+            multiplier_bonus: minigame.multiplier_bonus
+        };
+        
+        this.save_to_storage();
+        return reward;
+    }
+
+    update_minigame_buffs() {
+        const now = Date.now();
+        for (const [buff_id, buff] of Object.entries(this.minigame_buffs)) {
+            if (buff.end_time <= now) {
+                buff.active = false;
+            }
+        }
+    }
+
+    full_reset() {
+        if (confirm('⚠️ WARNING: This will delete ALL progress including prestige! Are you sure?')) {
+            if (confirm('This is irreversible. Click OK to confirm complete wipe.')) {
+                localStorage.removeItem('vibe_typing_save');
+                location.reload();
+            }
+        }
     }
 
     get_random_quote() {
@@ -382,6 +564,9 @@ function game_loop() {
         last_passive_income_time = now;
     }
     
+    // Update minigame buffs
+    game.update_minigame_buffs();
+    
     // Update auto-typer progress bars
     const auto_typers = game.get_auto_typer_list();
     for (const typer of auto_typers) {
@@ -406,7 +591,7 @@ function game_loop() {
 // DOM HELPER FUNCTIONS
 // ============================================
 function update_display() {
-    document.getElementById('characterCount').textContent = Math.round(game.characters);
+    document.getElementById('characterCount').textContent = format_large_number(game.characters);
     document.getElementById('multiplierDisplay').textContent = game.get_current_multiplier().toFixed(2) + 'x';
     document.getElementById('prestigeDisplay').textContent = game.prestige;
     update_upgrades_list();
@@ -488,7 +673,8 @@ function render_shop() {
     
     for (const upgrade of upgrades) {
         const count = game.upgrades[upgrade.id] || 0;
-        const can_afford = game.characters >= upgrade.cost;
+        const cost = game.get_upgrade_cost(upgrade.id);
+        const can_afford = game.characters >= cost;
         const is_owned = count > 0;
         const at_max = count >= upgrade.max_purchased;
         
@@ -501,7 +687,7 @@ function render_shop() {
         div.innerHTML = `
             <div class="upgrade-name">${upgrade.name}</div>
             <div class="upgrade-description">${upgrade.description}</div>
-            <div class="upgrade-cost ${can_afford ? '' : 'unaffordable'}">${upgrade.cost} characters</div>
+            <div class="upgrade-cost ${can_afford ? '' : 'unaffordable'}">${cost} characters</div>
             <button class="upgrade-button ${button_disabled ? '' : ''}" ${button_disabled ? 'disabled' : ''} onclick="purchase_upgrade_click('${upgrade.id}')">
                 ${button_text}
             </button>
@@ -530,18 +716,20 @@ function close_shop() {
 }
 
 function open_prestige() {
-    const new_prestige_gain = Math.floor(Math.sqrt(game.characters / 100)) + 1;
-    const bonus_per = 0.05 * new_prestige_gain;
+    const required = game.get_required_characters_for_prestige();
+    const can_prestige = game.can_prestige();
     
-    document.getElementById('prestigeCurrentCharacters').textContent = game.characters;
-    document.getElementById('prestigeGain').textContent = new_prestige_gain;
-    document.getElementById('prestigeBonus').textContent = `+${bonus_per.toFixed(2)}x (${(game.prestige_multiplier + bonus_per).toFixed(2)}x total)`;
+    document.getElementById('prestigeCurrentCharacters').textContent = format_large_number(game.characters);
+    document.getElementById('prestigeRequired').textContent = format_large_number(required);
+    document.getElementById('prestigeGain').textContent = '1';
+    document.getElementById('prestigeBonus').textContent = `+0.10x (${(game.prestige_multiplier + 0.1).toFixed(2)}x total)`;
+    document.getElementById('prestigeMultiplierGain').textContent = `Next Base: ${(game.prestige + 2)}x`;
     
     // Show unlocks preview
     const unlocks_div = document.getElementById('unlocksPreview');
     unlocks_div.innerHTML = '';
     
-    const future_prestige = game.prestige + new_prestige_gain;
+    const future_prestige = game.prestige + 1;
     for (const category in QUOTES_DATABASE) {
         if (QUOTES_DATABASE[category].prestige_unlock <= future_prestige && !game.unlocked_categories.has(category)) {
             const badge = document.createElement('div');
@@ -553,6 +741,15 @@ function open_prestige() {
     
     if (unlocks_div.children.length === 0) {
         unlocks_div.innerHTML = '<span style="color: var(--text-muted); font-size: 12px;">No new categories at this prestige level</span>';
+    }
+    
+    // Enable/disable button
+    const btn = document.getElementById('confirmPrestige');
+    btn.disabled = !can_prestige;
+    if (!can_prestige) {
+        btn.textContent = `Need ${format_large_number(required - Math.round(game.characters))} more`;
+    } else {
+        btn.textContent = 'Confirm Prestige Reset';
     }
     
     document.getElementById('prestigeModal').classList.remove('hidden');
@@ -673,7 +870,209 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ============================================
-// EVENT LISTENERS
+// MINIGAMES CHALLENGES
+// ============================================
+const CHALLENGE_WORDS = {
+    short: ['cat', 'dog', 'run', 'jump', 'type', 'fast', 'code', 'vibe', 'flow', 'speed'],
+    medium: ['typing', 'challenge', 'minigame', 'performance', 'accuracy', 'perfect', 'rapid', 'rhythm'],
+    long: ['programming', 'acceleration', 'excellence', 'adventure']
+};
+
+const CHALLENGE_PHRASES = [
+    'type fast now',
+    'speed is key',
+    'keep typing',
+    'go faster',
+    'feel the vibe',
+    'typing power',
+    'stay focused'
+];
+
+function get_random_challenge(minigame_id) {
+    const minigame = MINIGAMES.find(m => m.id === minigame_id);
+    if (!minigame) return '';
+    
+    if (minigame.challenge === 'type-word') {
+        const words = CHALLENGE_WORDS[minigame.word_length];
+        return words[Math.floor(Math.random() * words.length)];
+    } else if (minigame.challenge === 'perfect-type') {
+        const words = CHALLENGE_WORDS['short'];
+        return words[Math.floor(Math.random() * words.length)];
+    } else if (minigame.challenge === 'rapid-fire') {
+        return CHALLENGE_PHRASES[Math.floor(Math.random() * CHALLENGE_PHRASES.length)];
+    }
+    return '';
+}
+function render_minigames() {
+    const content = document.getElementById('minigamesContent');
+    content.innerHTML = '';
+    
+    for (const minigame of MINIGAMES) {
+        const is_available = game.is_minigame_available(minigame.id);
+        const last_played = game.minigame_last_played[minigame.id] || 0;
+        const now = Date.now();
+        
+        let cooldown_remaining = 0;
+        if (!is_available) {
+            cooldown_remaining = Math.ceil((minigame.cooldown_ms - (now - last_played)) / 1000);
+        }
+        
+        const div = document.createElement('div');
+        div.className = `minigame-card ${is_available ? 'available' : ''}`;
+        
+        let button_html = '';
+        if (is_available) {
+            button_html = `<button class="minigame-btn" onclick="start_minigame('${minigame.id}')">Play Now</button>`;
+        } else {
+            button_html = `<div class="minigame-cooldown">Available in ${cooldown_remaining}s</div>`;
+        }
+        
+        div.innerHTML = `
+            <div class="minigame-title">${minigame.name}</div>
+            <div class="minigame-description">${minigame.description}</div>
+            <div class="minigame-bonus">Reward: +${minigame.reward_base} characters</div>
+            ${button_html}
+        `;
+        
+        content.appendChild(div);
+    }
+}
+
+function open_minigames() {
+    render_minigames();
+    document.getElementById('minigamesModal').classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+}
+
+function close_minigames() {
+    document.getElementById('minigamesModal').classList.add('hidden');
+    document.getElementById('overlay').classList.add('hidden');
+}
+
+let current_minigame_challenge = null;
+let minigame_start_time = null;
+let minigame_correct_count = 0;
+
+function start_minigame(minigame_id) {
+    const minigame = MINIGAMES.find(m => m.id === minigame_id);
+    if (!minigame || !game.is_minigame_available(minigame_id)) return;
+    
+    current_minigame_challenge = {
+        id: minigame_id,
+        word: get_random_challenge(minigame_id),
+        attempts: minigame.challenge === 'rapid-fire' ? 3 : 1,
+        correct: 0,
+        input: ''
+    };
+    
+    minigame_start_time = Date.now();
+    minigame_correct_count = 0;
+    
+    show_minigame_challenge();
+    close_minigames();
+}
+
+function show_minigame_challenge() {
+    if (!current_minigame_challenge) return;
+    
+    const minigame = MINIGAMES.find(m => m.id === current_minigame_challenge.id);
+    const challenge = current_minigame_challenge;
+    
+    const modal = document.getElementById('challengeModal');
+    const title = document.getElementById('challengeTitle');
+    const display = document.getElementById('challengeDisplay');
+    const input = document.getElementById('challengeInput');
+    const progress = document.getElementById('challengeProgress');
+    
+    title.textContent = minigame.name;
+    display.textContent = challenge.word;
+    input.value = '';
+    input.placeholder = 'Type here...';
+    
+    if (minigame.challenge === 'rapid-fire') {
+        progress.textContent = `${challenge.correct}/${challenge.attempts}`;
+    } else {
+        progress.textContent = '0/1';
+    }
+    
+    modal.classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+    input.focus();
+}
+
+function close_minigame_challenge() {
+    document.getElementById('challengeModal').classList.add('hidden');
+    document.getElementById('overlay').classList.add('hidden');
+    current_minigame_challenge = null;
+}
+
+function on_minigame_input() {
+    if (!current_minigame_challenge) return;
+    
+    const input = document.getElementById('challengeInput');
+    const minigame = MINIGAMES.find(m => m.id === current_minigame_challenge.id);
+    
+    if (input.value === current_minigame_challenge.word) {
+        current_minigame_challenge.correct++;
+        
+        if (minigame.challenge === 'rapid-fire') {
+            if (current_minigame_challenge.correct >= current_minigame_challenge.attempts) {
+                complete_minigame(1.0);
+            } else {
+                // Get next word
+                current_minigame_challenge.word = get_random_challenge(minigame.id);
+                show_minigame_challenge();
+            }
+        } else {
+            complete_minigame(1.0);
+        }
+    }
+}
+
+function complete_minigame(performance_multiplier) {
+    const minigame = MINIGAMES.find(m => m.id === current_minigame_challenge.id);
+    const reward = game.award_minigame_reward(minigame.id, performance_multiplier);
+    game.play_minigame(minigame.id);
+    
+    show_minigame_popup(reward, minigame.name);
+    close_minigame_challenge();
+    update_display();
+    
+    setTimeout(() => {
+        render_minigames();
+    }, 500);
+}
+
+function show_minigame_popup(characters, gameName) {
+    const popup = document.createElement('div');
+    popup.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 28px;
+        font-weight: bold;
+        color: #10b981;
+        pointer-events: none;
+        z-index: 2000;
+        animation: popup-float 1s ease-out forwards;
+        padding: 20px;
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: 10px;
+    `;
+    popup.textContent = `${gameName} Complete! +${characters} characters`;
+    document.body.appendChild(popup);
+    
+    setTimeout(() => popup.remove(), 1500);
+}
+
+function play_minigame_click(minigame_id) {
+    start_minigame(minigame_id);
+}
+
+// ============================================
+// EVENT LISTENERS ADDITIONS
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
     game.load_from_storage();
@@ -683,8 +1082,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Start game loop for passive income
     game_loop();
     
-    // Typing
-    document.getElementById('typingInput').addEventListener('input', on_typing_input);
+    // Typing - prevent paste/copy exploit
+    const typingInput = document.getElementById('typingInput');
+    typingInput.addEventListener('input', on_typing_input);
+    typingInput.addEventListener('paste', (e) => {
+        e.preventDefault();
+        return false;
+    });
+    
+    // Prevent selecting/copying the quote display
+    const quoteDisplay = document.getElementById('currentQuote');
+    quoteDisplay.addEventListener('copy', (e) => e.preventDefault());
+    quoteDisplay.style.userSelect = 'none';
+    quoteDisplay.style.webkitUserSelect = 'none';
     
     // Shop
     document.getElementById('shopBtn').addEventListener('click', open_shop);
@@ -705,12 +1115,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('closePrestige').addEventListener('click', close_prestige);
     document.getElementById('confirmPrestige').addEventListener('click', confirm_prestige);
     
+    // Minigames
+    document.getElementById('minigamesBtn').addEventListener('click', open_minigames);
+    document.getElementById('closeMinigames').addEventListener('click', close_minigames);
+    
+    // Minigame challenge
+    const challengeInput = document.getElementById('challengeInput');
+    if (challengeInput) {
+        challengeInput.addEventListener('input', on_minigame_input);
+        challengeInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            return false;
+        });
+    }
+    
+    // Full Reset Button
+    document.getElementById('fullResetBtn').addEventListener('click', () => {
+        game.full_reset();
+    });
+    
     // Overlay click to close
     document.getElementById('overlay').addEventListener('click', () => {
         close_shop();
         close_prestige();
+        close_minigames();
+        close_minigame_challenge();
     });
     
     // Focus input on load
-    document.getElementById('typingInput').focus();
+    typingInput.focus();
 });

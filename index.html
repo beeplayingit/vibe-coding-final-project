@@ -54,6 +54,7 @@
             <div class="action-buttons">
                 <button id="shopBtn" class="btn btn-primary">Shop</button>
                 <button id="prestigeBtn" class="btn btn-secondary">Prestige</button>
+                <button id="minigamesBtn" class="btn btn-primary">Minigames</button>
             </div>
 
             <div class="active-upgrades">
@@ -103,12 +104,20 @@
                             <span class="value" id="prestigeCurrentCharacters">0</span>
                         </div>
                         <div class="prestige-stat">
-                            <span class="label">Prestige Level Gained</span>
+                            <span class="label">Characters Required</span>
+                            <span class="value" id="prestigeRequired">400</span>
+                        </div>
+                        <div class="prestige-stat">
+                            <span class="label">Prestige Levels Gained</span>
                             <span class="value" id="prestigeGain">1</span>
                         </div>
                         <div class="prestige-stat">
                             <span class="label">Permanent Multiplier Bonus</span>
                             <span class="value" id="prestigeBonus">+0.10x</span>
+                        </div>
+                        <div class="prestige-stat">
+                            <span class="label">Base Multiplier After Prestige</span>
+                            <span class="value" id="prestigeMultiplierGain">2x</span>
                         </div>
                         <div class="prestige-unlocks">
                             <span class="label">New Categories Unlocked</span>
@@ -116,10 +125,49 @@
                         </div>
                     </div>
                     <button id="confirmPrestige" class="btn btn-primary">Confirm Prestige Reset</button>
-                    <p class="prestige-warning">This will reset your words and upgrades but keep your prestige bonus.</p>
+                    <p class="prestige-warning">This will reset your characters and upgrades but keep your prestige bonus.</p>
                 </div>
             </div>
         </div>
+
+        <!-- Minigames Modal -->
+        <div id="minigamesModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Minigames</h2>
+                    <button class="close-btn" id="closeMinigames">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="minigamesContent" class="minigames-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Minigame Challenge Modal -->
+        <div id="challengeModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="challengeTitle">Speed Sprint</h2>
+                    <button class="close-btn" id="closeChallengeBtn" onclick="close_minigame_challenge()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="challenge-display">
+                        <div id="challengeDisplay" class="challenge-text">type this</div>
+                    </div>
+                    <div class="challenge-progress" id="challengeProgress">0/1</div>
+                    <input 
+                        type="text" 
+                        id="challengeInput" 
+                        class="challenge-input" 
+                        placeholder="Type here..."
+                        autocomplete="off"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Reset Button -->
+        <button id="fullResetBtn" class="full-reset-btn" title="Click to wipe all progress">⚠️</button>
 
         <!-- Overlay -->
         <div id="overlay" class="overlay hidden"></div>
