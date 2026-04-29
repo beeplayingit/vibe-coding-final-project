@@ -1,0 +1,5 @@
+NOTES FOR THE AI
+set up a text system for the numbers now so that it says "1.xx million" for the 
+characters if it's over a million in currency. do that up to trillion. also, the
+ minigames should still give you a multiplier amount for the randomly given quote. 
+ also, make the prestiges harder to reach because i can still reach them in one minute.
