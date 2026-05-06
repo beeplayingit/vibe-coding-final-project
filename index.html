@@ -126,6 +126,22 @@
                     </div>
                     <button id="confirmPrestige" class="btn btn-primary">Confirm Prestige Reset</button>
                     <p class="prestige-warning">This will reset your characters and upgrades but keep your prestige bonus.</p>
+                    <button id="prestigeShopBtn" class="btn btn-secondary" style="margin-top: 10px;" onclick="open_prestige_shop()">Prestige Shop</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prestige Shop Modal -->
+        <div id="prestigeShopModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Prestige Shop</h2>
+                    <button class="close-btn" id="closePrestigeShop" onclick="close_prestige_shop()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="prestige-points-info" id="prestigePointsDisplay">Points: 0</div>
+                    <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Spend prestige points to buy permanent multiplier upgrades. Unlocked every prestige reset.</p>
+                    <div id="prestigeShopContent" class="prestige-shop-content"></div>
                 </div>
             </div>
         </div>
@@ -162,6 +178,42 @@
                         placeholder="Type here..."
                         autocomplete="off"
                     >
+                    <button class="btn btn-primary" onclick="submit_typing_challenge()" style="margin-top: 15px; width: 100%;">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Game Modal -->
+        <div id="memoryGameModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Memory Master</h2>
+                    <button class="close-btn" onclick="document.getElementById('memoryGameModal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="memoryDisplay" class="memory-display"></div>
+                    <input 
+                        type="text" 
+                        id="memoryInput" 
+                        class="challenge-input" 
+                        placeholder="Type words separated by spaces..."
+                        autocomplete="off"
+                    >
+                    <button class="btn btn-primary" onclick="submit_memory_game()" style="margin-top: 15px; width: 100%;">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Word Match Modal -->
+        <div id="wordMatchModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Word Match</h2>
+                    <button class="close-btn" onclick="document.getElementById('wordMatchModal').classList.add('hidden'); document.getElementById('overlay').classList.add('hidden');">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="wordMatchContainer" class="word-match-container"></div>
+                    <button class="btn btn-primary" onclick="submit_word_match()" style="margin-top: 15px; width: 100%;">Submit</button>
                 </div>
             </div>
         </div>

@@ -146,6 +146,24 @@ body {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
+.typing-input-wrapper.error .typing-input {
+    border-color: #ef4444;
+    background: #0f172a;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    animation: shake 0.3s ease-in-out;
+}
+
+.typing-input-wrapper.success .typing-input {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
 .input-progress {
     position: absolute;
     bottom: 0;
@@ -595,6 +613,122 @@ body {
     color: var(--text-muted);
     text-align: center;
     margin-top: 15px;
+}
+
+/* ========== Prestige Shop ========== */
+.prestige-points-info {
+    background: rgba(139, 92, 246, 0.2);
+    border: 2px solid var(--secondary-color);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.prestige-shop-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.prestige-upgrade-card {
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 15px;
+    transition: var(--transition);
+}
+
+.prestige-upgrade-card:hover:not(.unaffordable) {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.3);
+}
+
+.prestige-upgrade-card.unaffordable {
+    opacity: 0.6;
+    border-color: var(--danger-color);
+}
+
+.upgrade-level {
+    font-size: 12px;
+    color: var(--success-color);
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* ========== Memory Game ========== */
+.memory-display {
+    background: #0f172a;
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    min-height: 120px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.memory-word {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--secondary-color);
+    background: rgba(139, 92, 246, 0.1);
+    padding: 15px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--secondary-color);
+    animation: pop-in 0.3s ease-out;
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* ========== Word Match ========== */
+.word-match-container {
+    display: grid;
+    gap: 15px;
+}
+
+.word-match-pair {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 15px;
+    align-items: center;
+    background: #0f172a;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.word-left {
+    font-weight: bold;
+    color: var(--secondary-color);
+    font-size: 16px;
+}
+
+.word-select {
+    padding: 10px;
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 12px;
+}
+
+.word-select:hover,
+.word-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
 }
 
 /* ========== Responsive Design ========== */

@@ -198,6 +198,16 @@ const SHOP_UPGRADES = {
 };
 
 // ============================================
+// PRESTIGE SHOP UPGRADES (Bought with prestige points)
+// ============================================
+const PRESTIGE_UPGRADES = [
+    { id: 'p_mult1', name: 'Prestige +0.5x', description: 'Permanent +0.5x multiplier', cost: 1, effect: 0.5 },
+    { id: 'p_mult2', name: 'Prestige +1.0x', description: 'Permanent +1.0x multiplier', cost: 2, effect: 1.0 },
+    { id: 'p_mult3', name: 'Prestige +1.5x', description: 'Permanent +1.5x multiplier', cost: 3, effect: 1.5 },
+    { id: 'p_mult4', name: 'Prestige +2.0x', description: 'Permanent +2.0x multiplier', cost: 5, effect: 2.0 },
+];
+
+// ============================================
 // MINIGAMES CONFIGURATION
 // ============================================
 const MINIGAMES = [
@@ -210,29 +220,51 @@ const MINIGAMES = [
         multiplier_bonus: 0.2,
         multiplier_duration_ms: 30000,
         challenge: 'type-word',
-        word_length: 'medium' // 5-7 letters
+        word_length: 'medium'
     },
     { 
         id: 'accuracy-master', 
         name: 'Accuracy Master', 
-        description: 'Type perfectly to earn 150 bonus characters', 
+        description: 'Type perfectly to earn bonus characters', 
         cooldown_ms: 60000,
         reward_base: 150,
         multiplier_bonus: 0.3,
         multiplier_duration_ms: 30000,
         challenge: 'perfect-type',
-        word_length: 'short' // 3-5 letters
+        word_length: 'short'
     },
     { 
         id: 'rapid-fire', 
         name: 'Rapid Fire', 
-        description: 'Type 3 short phrases in 20 seconds', 
+        description: 'Type 3 short phrases quickly', 
         cooldown_ms: 90000,
         reward_base: 200,
         multiplier_bonus: 0.5,
         multiplier_duration_ms: 45000,
         challenge: 'rapid-fire',
         word_length: 'short'
+    },
+    {
+        id: 'memory-master',
+        name: 'Memory Master',
+        description: 'Memorize 5 words and type them back',
+        cooldown_ms: 120000,
+        reward_base: 250,
+        multiplier_bonus: 0.4,
+        multiplier_duration_ms: 40000,
+        challenge: 'memory',
+        memory_count: 5
+    },
+    {
+        id: 'word-match',
+        name: 'Word Match',
+        description: 'Match words to their definitions',
+        cooldown_ms: 100000,
+        reward_base: 180,
+        multiplier_bonus: 0.35,
+        multiplier_duration_ms: 35000,
+        challenge: 'word-match',
+        match_count: 3
     },
 ];
 
@@ -255,7 +287,10 @@ class GameState {
     constructor() {
         this.characters = 0;
         this.prestige = 0;
+        this.prestige_points = 0; // Points earned from prestige resets
         this.prestige_multiplier = 1.0; // Base multiplier per prestige level
+        this.prestige_purchased_multiplier = 0; // Multiplier from prestige shop purchases
+        this.prestige_upgrades = {}; // { 'p_mult1': 1, 'p_mult2': 2, ... }
         this.upgrades = {}; // { 'mult1': 2, 'auto1': 1, ... }
         this.minigame_buffs = {}; // { 'rapid-fire': { active: true, end_time: 123456, multiplier_bonus: 0.3 }, ... }
         this.minigame_last_played = {}; // { 'rapid-fire': 123456, ... } (timestamp)
@@ -271,7 +306,10 @@ class GameState {
             const data = JSON.parse(saved);
             this.characters = data.characters || 0;
             this.prestige = data.prestige || 0;
+            this.prestige_points = data.prestige_points || 0;
             this.prestige_multiplier = data.prestige_multiplier || 1.0;
+            this.prestige_purchased_multiplier = data.prestige_purchased_multiplier || 0;
+            this.prestige_upgrades = data.prestige_upgrades || {};
             this.upgrades = data.upgrades || {};
             this.minigame_last_played = data.minigame_last_played || {};
             this.unlocked_categories = new Set(data.unlocked_categories || ['movies']);
@@ -283,7 +321,10 @@ class GameState {
         const data = {
             characters: this.characters,
             prestige: this.prestige,
+            prestige_points: this.prestige_points,
             prestige_multiplier: this.prestige_multiplier,
+            prestige_purchased_multiplier: this.prestige_purchased_multiplier,
+            prestige_upgrades: this.prestige_upgrades,
             upgrades: this.upgrades,
             minigame_last_played: this.minigame_last_played,
             unlocked_categories: Array.from(this.unlocked_categories),
@@ -312,9 +353,9 @@ class GameState {
     }
 
     get_current_multiplier() {
-        // Base multiplier from prestige: prestige_level + 1, plus permanent bonus
+        // Base multiplier from prestige: prestige_level + 1, plus permanent bonuses
         // Prestige 0: 1x, Prestige 1: 2.1x (with 0.1 bonus), Prestige 2: 3.2x, etc.
-        let multiplier = this.prestige + this.prestige_multiplier;
+        let multiplier = this.prestige + this.prestige_multiplier + this.prestige_purchased_multiplier;
         
         // Add multiplier upgrades
         for (const [upgrade_id, count] of Object.entries(this.upgrades)) {
@@ -449,10 +490,25 @@ class GameState {
         return true;
     }
 
+    purchase_prestige_upgrade(upgrade_id) {
+        const upgrade = PRESTIGE_UPGRADES.find(u => u.id === upgrade_id);
+        if (!upgrade) return false;
+        
+        if (this.prestige_points < upgrade.cost) return false;
+        
+        this.prestige_points -= upgrade.cost;
+        const current_count = this.prestige_upgrades[upgrade_id] || 0;
+        this.prestige_upgrades[upgrade_id] = current_count + 1;
+        this.prestige_purchased_multiplier += upgrade.effect;
+        this.save_to_storage();
+        return true;
+    }
+
     prestige_reset() {
         const new_prestige_level = 1; // Each prestige grants 1 level now
         this.prestige += new_prestige_level;
         this.prestige_multiplier += 0.1; // Permanent bonus increases by 0.1
+        this.prestige_points += 2; // Earn 2 prestige points per reset
         
         // Unlock new categories
         for (const category in QUOTES_DATABASE) {
@@ -461,7 +517,7 @@ class GameState {
             }
         }
         
-        // Reset progress
+        // Reset progress (but keep prestige upgrades)
         this.characters = 0;
         this.upgrades = {};
         this.minigame_buffs = {};
@@ -687,7 +743,7 @@ function render_shop() {
         div.innerHTML = `
             <div class="upgrade-name">${upgrade.name}</div>
             <div class="upgrade-description">${upgrade.description}</div>
-            <div class="upgrade-cost ${can_afford ? '' : 'unaffordable'}">${cost} characters</div>
+            <div class="upgrade-cost ${can_afford ? '' : 'unaffordable'}">${format_large_number(cost)} characters</div>
             <button class="upgrade-button ${button_disabled ? '' : ''}" ${button_disabled ? 'disabled' : ''} onclick="purchase_upgrade_click('${upgrade.id}')">
                 ${button_text}
             </button>
@@ -700,6 +756,13 @@ function render_shop() {
 function purchase_upgrade_click(upgrade_id) {
     if (game.purchase_upgrade(upgrade_id)) {
         render_shop();
+        update_display();
+    }
+}
+
+function purchase_prestige_upgrade_click(upgrade_id) {
+    if (game.purchase_prestige_upgrade(upgrade_id)) {
+        render_prestige_shop();
         update_display();
     }
 }
@@ -719,10 +782,16 @@ function open_prestige() {
     const required = game.get_required_characters_for_prestige();
     const can_prestige = game.can_prestige();
     
+    // Show prestige points
+    const prestige_points_display = document.getElementById('prestigePointsInfo');
+    if (prestige_points_display) {
+        prestige_points_display.textContent = `Prestige Points: ${game.prestige_points}`;
+    }
+    
     document.getElementById('prestigeCurrentCharacters').textContent = format_large_number(game.characters);
     document.getElementById('prestigeRequired').textContent = format_large_number(required);
     document.getElementById('prestigeGain').textContent = '1';
-    document.getElementById('prestigeBonus').textContent = `+0.10x (${(game.prestige_multiplier + 0.1).toFixed(2)}x total)`;
+    document.getElementById('prestigeBonus').textContent = `+0.10x (${(game.prestige_multiplier + 0.1).toFixed(2)}x total) + Earn 2 Points`;
     document.getElementById('prestigeMultiplierGain').textContent = `Next Base: ${(game.prestige + 2)}x`;
     
     // Show unlocks preview
@@ -761,6 +830,46 @@ function close_prestige() {
     document.getElementById('overlay').classList.add('hidden');
 }
 
+function open_prestige_shop() {
+    render_prestige_shop();
+    document.getElementById('prestigeShopModal').classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+}
+
+function close_prestige_shop() {
+    document.getElementById('prestigeShopModal').classList.add('hidden');
+    document.getElementById('overlay').classList.add('hidden');
+}
+
+function render_prestige_shop() {
+    const content = document.getElementById('prestigeShopContent');
+    const points_display = document.getElementById('prestigePointsDisplay');
+    
+    points_display.textContent = `${game.prestige_points} / ${game.prestige_points + PRESTIGE_UPGRADES.reduce((sum, u) => sum + (game.prestige_upgrades[u.id] || 0) * u.cost, 0)}`;
+    
+    content.innerHTML = '';
+    
+    for (const upgrade of PRESTIGE_UPGRADES) {
+        const count = game.prestige_upgrades[upgrade.id] || 0;
+        const can_afford = game.prestige_points >= upgrade.cost;
+        
+        const div = document.createElement('div');
+        div.className = `prestige-upgrade-card ${can_afford ? '' : 'unaffordable'}`;
+        
+        div.innerHTML = `
+            <div class="upgrade-name">${upgrade.name}</div>
+            <div class="upgrade-description">${upgrade.description}</div>
+            <div class="upgrade-cost ${can_afford ? '' : 'unaffordable'}">Cost: ${upgrade.cost} Point${upgrade.cost !== 1 ? 's' : ''}</div>
+            <div class="upgrade-level">Purchased: ${count}</div>
+            <button class="upgrade-button ${!can_afford ? 'disabled' : ''}" ${!can_afford ? 'disabled' : ''} onclick="purchase_prestige_upgrade_click('${upgrade.id}')">
+                ${can_afford ? 'Buy' : 'Not Enough Points'}
+            </button>
+        `;
+        
+        content.appendChild(div);
+    }
+}
+
 function confirm_prestige() {
     game.prestige_reset();
     close_prestige();
@@ -791,27 +900,56 @@ function check_quote_match() {
 }
 
 function on_typing_input() {
-    const input = document.getElementById('typingInput').value;
+    const input = document.getElementById('typingInput');
     const target = game.current_quote;
+    let current_input = input.value;
+    
+    // Character-by-character validation (TypeRacer/Nitro Type style)
+    let valid_input = '';
+    let has_error = false;
+    
+    for (let i = 0; i < current_input.length; i++) {
+        if (i < target.length && current_input[i] === target[i]) {
+            valid_input += current_input[i];
+        } else if (i < target.length) {
+            // Mismatch found - error state
+            has_error = true;
+            break;
+        } else {
+            // Typed beyond the quote length - prevent it
+            break;
+        }
+    }
+    
+    // Update input value to only contain valid characters
+    input.value = valid_input;
+    
+    // Update visual feedback
+    const inputWrapper = document.querySelector('.typing-input-wrapper');
+    if (has_error) {
+        inputWrapper.classList.add('error');
+    } else {
+        inputWrapper.classList.remove('error');
+    }
     
     // Update progress bar
-    const progress = (input.length / target.length) * 100;
+    const progress = (valid_input.length / target.length) * 100;
     document.getElementById('inputProgress').style.width = Math.min(progress, 100) + '%';
     
     // Update character count
-    document.getElementById('typedChars').textContent = input.length;
+    document.getElementById('typedChars').textContent = valid_input.length;
     
     // Update WPM display
-    if (game.start_time) {
+    if (game.start_time && valid_input.length > 0) {
         const elapsed = (Date.now() - game.start_time) / 1000; // seconds
-        if (elapsed > 0.5 && input.length > 0) {
-            const wpm = (input.length / 5) / (elapsed / 60);
+        if (elapsed > 0.5) {
+            const wpm = (valid_input.length / 5) / (elapsed / 60);
             document.getElementById('wpmDisplay').textContent = ` | ${wpm.toFixed(1)} WPM`;
         }
     }
     
     // Check for completion
-    if (check_quote_match()) {
+    if (valid_input === target && valid_input.length > 0) {
         on_quote_completed();
     }
 }
@@ -888,6 +1026,32 @@ const CHALLENGE_PHRASES = [
     'stay focused'
 ];
 
+// Memory game word lists
+const MEMORY_WORDS = [
+    ['apple', 'beach', 'cloud', 'dream', 'eagle', 'forest', 'guitar', 'harbor', 'island', 'jungle'],
+    ['keyboard', 'library', 'mountain', 'network', 'ocean', 'piano', 'quantum', 'river', 'sunset', 'thunder'],
+    ['umbrella', 'victory', 'whisper', 'xylophone', 'yellow', 'zebra', 'zenith', 'zephyr', 'zodiac', 'zone']
+];
+
+// Word match pairs (word: definition)
+const WORD_MATCHES = [
+    [
+        { word: 'serendipity', def: 'Finding something good by chance' },
+        { word: 'eloquent', def: 'Fluent and persuasive in speaking' },
+        { word: 'ubiquitous', def: 'Present everywhere at once' }
+    ],
+    [
+        { word: 'meticulous', def: 'Showing great attention to detail' },
+        { word: 'ephemeral', def: 'Lasting for a short time' },
+        { word: 'pragmatic', def: 'Dealing with things in a practical way' }
+    ],
+    [
+        { word: 'benevolent', def: 'Kind and generous' },
+        { word: 'cacophony', def: 'A harsh unpleasant mixture of sounds' },
+        { word: 'nostalgia', def: 'Sentimental longing for the past' }
+    ]
+];
+
 function get_random_challenge(minigame_id) {
     const minigame = MINIGAMES.find(m => m.id === minigame_id);
     if (!minigame) return '';
@@ -930,7 +1094,7 @@ function render_minigames() {
         div.innerHTML = `
             <div class="minigame-title">${minigame.name}</div>
             <div class="minigame-description">${minigame.description}</div>
-            <div class="minigame-bonus">Reward: +${minigame.reward_base} characters</div>
+            <div class="minigame-bonus">Reward: +${format_large_number(minigame.reward_base)} chars / +${minigame.multiplier_bonus.toFixed(2)}x for ${minigame.multiplier_duration_ms/1000}s</div>
             ${button_html}
         `;
         
@@ -950,26 +1114,40 @@ function close_minigames() {
 }
 
 let current_minigame_challenge = null;
+let current_minigame_id = null; // Track minigame ID for all game types
 let minigame_start_time = null;
 let minigame_correct_count = 0;
+let current_memory_words = [];
+let current_memory_display_time = 5000; // Show words for 5 seconds
+let current_word_matches = [];
+let current_shuffled_definitions = []; // Store shuffled defs for word matching
+let word_match_score = 0;
 
 function start_minigame(minigame_id) {
     const minigame = MINIGAMES.find(m => m.id === minigame_id);
     if (!minigame || !game.is_minigame_available(minigame_id)) return;
     
-    current_minigame_challenge = {
-        id: minigame_id,
-        word: get_random_challenge(minigame_id),
-        attempts: minigame.challenge === 'rapid-fire' ? 3 : 1,
-        correct: 0,
-        input: ''
-    };
+    current_minigame_id = minigame_id;
     
-    minigame_start_time = Date.now();
-    minigame_correct_count = 0;
-    
-    show_minigame_challenge();
-    close_minigames();
+    if (minigame.challenge === 'memory') {
+        start_memory_game(minigame_id);
+    } else if (minigame.challenge === 'word-match') {
+        start_word_match_game(minigame_id);
+    } else {
+        current_minigame_challenge = {
+            id: minigame_id,
+            word: get_random_challenge(minigame_id),
+            attempts: minigame.challenge === 'rapid-fire' ? 3 : 1,
+            correct: 0,
+            input: ''
+        };
+        
+        minigame_start_time = Date.now();
+        minigame_correct_count = 0;
+        
+        show_minigame_challenge();
+        close_minigames();
+    }
 }
 
 function show_minigame_challenge() {
@@ -1010,36 +1188,53 @@ function on_minigame_input() {
     if (!current_minigame_challenge) return;
     
     const input = document.getElementById('challengeInput');
-    const minigame = MINIGAMES.find(m => m.id === current_minigame_challenge.id);
+    const target = current_minigame_challenge.word;
     
-    if (input.value === current_minigame_challenge.word) {
-        current_minigame_challenge.correct++;
-        
-        if (minigame.challenge === 'rapid-fire') {
-            if (current_minigame_challenge.correct >= current_minigame_challenge.attempts) {
-                complete_minigame(1.0);
-            } else {
-                // Get next word
-                current_minigame_challenge.word = get_random_challenge(minigame.id);
-                show_minigame_challenge();
-            }
-        } else {
-            complete_minigame(1.0);
-        }
+    // Show visual feedback if correct
+    if (input.value === target) {
+        input.parentElement.classList.add('success');
+    } else {
+        input.parentElement.classList.remove('success');
     }
 }
 
 function complete_minigame(performance_multiplier) {
-    const minigame = MINIGAMES.find(m => m.id === current_minigame_challenge.id);
-    const reward = game.award_minigame_reward(minigame.id, performance_multiplier);
-    game.play_minigame(minigame.id);
+    console.log('complete_minigame called with minigame_id:', current_minigame_id);
+    
+    const minigame_id = current_minigame_id || (current_minigame_challenge ? current_minigame_challenge.id : null);
+    console.log('Final minigame_id:', minigame_id);
+    
+    if (!minigame_id) {
+        console.error('No minigame ID found');
+        return;
+    }
+    
+    const minigame = MINIGAMES.find(m => m.id === minigame_id);
+    console.log('Found minigame:', minigame);
+    
+    if (!minigame) {
+        console.error('Minigame not found for ID:', minigame_id);
+        return;
+    }
+    
+    const reward = game.award_minigame_reward(minigame_id, performance_multiplier);
+    console.log('Reward awarded:', reward, 'characters');
+    console.log('Game characters after reward:', game.characters);
+    
+    game.play_minigame(minigame_id);
+    console.log('Minigame marked as played, cooldown set');
     
     show_minigame_popup(reward, minigame.name);
     close_minigame_challenge();
     update_display();
+    console.log('Display updated, character count:', document.getElementById('characterCount').textContent);
+    
+    current_minigame_id = null;
+    current_minigame_challenge = null;
     
     setTimeout(() => {
         render_minigames();
+        console.log('Minigames re-rendered');
     }, 500);
 }
 
@@ -1069,6 +1264,191 @@ function show_minigame_popup(characters, gameName) {
 
 function play_minigame_click(minigame_id) {
     start_minigame(minigame_id);
+}
+
+function start_memory_game(minigame_id) {
+    const minigame = MINIGAMES.find(m => m.id === minigame_id);
+    const word_set = MEMORY_WORDS[Math.floor(Math.random() * MEMORY_WORDS.length)];
+    current_memory_words = word_set.slice(0, minigame.memory_count);
+    
+    const modal = document.getElementById('memoryGameModal');
+    const display = document.getElementById('memoryDisplay');
+    
+    display.innerHTML = '';
+    current_memory_words.forEach(word => {
+        const wordElement = document.createElement('div');
+        wordElement.className = 'memory-word';
+        wordElement.textContent = word;
+        display.appendChild(wordElement);
+    });
+    
+    modal.classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+    close_minigames();
+    
+    // Show words for 5 seconds, then hide
+    setTimeout(() => {
+        display.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Type the words you remember...</div>';
+        document.getElementById('memoryInput').focus();
+        minigame_start_time = Date.now();
+    }, current_memory_display_time);
+}
+
+function check_memory_input() {
+    const input = document.getElementById('memoryInput').value.trim().toLowerCase();
+    if (!input) return;
+    
+    const expected = current_memory_words.join(' ').toLowerCase();
+    if (input === expected) {
+        const minigame_id = 'memory-master';
+        complete_minigame(1.0);
+        document.getElementById('memoryGameModal').classList.add('hidden');
+    }
+}
+
+function start_word_match_game(minigame_id) {
+    const minigame = MINIGAMES.find(m => m.id === minigame_id);
+    const match_set = WORD_MATCHES[Math.floor(Math.random() * WORD_MATCHES.length)];
+    current_word_matches = match_set.slice(0, minigame.match_count);
+    
+    const modal = document.getElementById('wordMatchModal');
+    const container = document.getElementById('wordMatchContainer');
+    
+    container.innerHTML = '';
+    word_match_score = 0;
+    
+    // Shuffle definitions and store for checking later
+    current_shuffled_definitions = [...current_word_matches].sort(() => Math.random() - 0.5);
+    
+    current_word_matches.forEach((pair, idx) => {
+        const wordDiv = document.createElement('div');
+        wordDiv.className = 'word-match-pair';
+        wordDiv.innerHTML = `
+            <div class="word-left">${pair.word}</div>
+            <select class="word-select" data-index="${idx}">
+                <option value="">Select definition...</option>
+                ${current_shuffled_definitions.map((p, i) => `<option value="${i}">${p.def}</option>`).join('')}
+            </select>
+        `;
+        container.appendChild(wordDiv);
+    });
+    
+    modal.classList.remove('hidden');
+    document.getElementById('overlay').classList.remove('hidden');
+    close_minigames();
+    minigame_start_time = Date.now();
+}
+
+function check_word_match_answer(idx, selected_idx) {
+    const shuffled = [...current_word_matches].sort(() => Math.random() - 0.5);
+    if (parseInt(selected_idx) >= 0) {
+        if (current_word_matches[idx].def === shuffled[selected_idx].def) {
+            word_match_score++;
+            
+            if (word_match_score === current_word_matches.length) {
+                complete_minigame(1.0);
+                document.getElementById('wordMatchModal').classList.add('hidden');
+            }
+        }
+    }
+}
+
+function submit_typing_challenge() {
+    console.log('submit_typing_challenge called');
+    console.log('current_minigame_id:', current_minigame_id);
+    console.log('current_minigame_challenge:', current_minigame_challenge);
+    
+    if (!current_minigame_challenge) {
+        console.error('No challenge data');
+        return;
+    }
+    
+    const input = document.getElementById('challengeInput').value;
+    const target = current_minigame_challenge.word;
+    const minigame = MINIGAMES.find(m => m.id === current_minigame_challenge.id);
+    
+    console.log('Input:', input, 'Target:', target, 'Match:', input === target);
+    
+    if (input === target) {
+        current_minigame_challenge.correct++;
+        
+        if (minigame.challenge === 'rapid-fire') {
+            if (current_minigame_challenge.correct >= current_minigame_challenge.attempts) {
+                // All words typed correctly!
+                complete_minigame(1.0);
+                close_minigame_challenge();
+            } else {
+                // Get next word for rapid-fire
+                current_minigame_challenge.word = get_random_challenge(minigame.id);
+                document.getElementById('challengeInput').value = '';
+                document.getElementById('challengeDisplay').textContent = current_minigame_challenge.word;
+                document.getElementById('challengeProgress').textContent = `${current_minigame_challenge.correct}/${current_minigame_challenge.attempts}`;
+                document.getElementById('challengeInput').focus();
+            }
+        } else {
+            // Single word minigame complete
+            console.log('Calling complete_minigame for single word challenge');
+            complete_minigame(1.0);
+            close_minigame_challenge();
+        }
+    } else {
+        alert('Incorrect! Try again.');
+    }
+}
+
+function submit_memory_game() {
+    console.log('submit_memory_game called');
+    console.log('current_minigame_id:', current_minigame_id);
+    
+    const input = document.getElementById('memoryInput').value.trim().toLowerCase();
+    const expected = current_memory_words.join(' ').toLowerCase();
+    
+    console.log('Input:', input, 'Expected:', expected, 'Match:', input === expected);
+    
+    if (input === expected) {
+        console.log('Calling complete_minigame for memory game');
+        complete_minigame(1.0);
+        setTimeout(() => {
+            document.getElementById('memoryGameModal').classList.add('hidden');
+            document.getElementById('overlay').classList.add('hidden');
+        }, 100);
+    } else {
+        alert('Incorrect! The words were: ' + expected);
+    }
+}
+
+function submit_word_match() {
+    console.log('submit_word_match called');
+    console.log('current_minigame_id:', current_minigame_id);
+    
+    const all_filled = document.querySelectorAll('.word-select').length > 0 && 
+                       Array.from(document.querySelectorAll('.word-select')).every(s => s.value !== '');
+    
+    if (!all_filled) {
+        alert('Please match all words to their definitions!');
+        return;
+    }
+    
+    let correct_count = 0;
+    document.querySelectorAll('.word-select').forEach((select, idx) => {
+        const selected_idx = parseInt(select.value);
+        if (current_word_matches[idx].def === current_shuffled_definitions[selected_idx].def) {
+            correct_count++;
+        }
+    });
+    
+    console.log('Correct matches:', correct_count, 'Total:', current_word_matches.length);
+    
+    if (correct_count === current_word_matches.length) {
+        console.log('Calling complete_minigame for word match');
+        complete_minigame(1.0);
+        setTimeout(() => {
+            document.getElementById('wordMatchModal').classList.add('hidden');
+            document.getElementById('overlay').classList.add('hidden');
+        }, 100);
+    } else {
+        alert(`Only ${correct_count}/${current_word_matches.length} correct. Try again!`);
+    }
 }
 
 // ============================================
